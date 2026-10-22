@@ -22,7 +22,7 @@ See the provider details: [Vercel commercial-use rules](https://vercel.com/docs/
 
 ## 1. Keep the project safe
 
-1. Review and save your current work in a private GitHub repository. This workspace currently has local changes and no configured Git remote; do not discard or reset them. Do not commit `.env` files, backups, or secrets.
+1. The project is committed on the GitHub `main` branch. Use a private repository when that matches your business policy. Do not commit `.env` files, backups, or secrets.
 2. Keep the frontend in the `client` folder, the API in `server`, and the database in TiDB Cloud. Do not put database credentials in frontend settings.
 3. Pick the same region for the API and database when possible.
 4. Use separate database accounts for the running API, schema migrations, backups, and restores. Give each account only the permissions it needs.
@@ -187,7 +187,7 @@ No backup was created or restored during this preparation. Backup status is ther
 
 ## Current status
 
-- No code was pushed and no cloud service, paid plan, database, domain, DNS record, or certificate was created.
+- The application source is pushed to the GitHub `main` branch. No cloud service, paid plan, database, domain, DNS record, or certificate was created.
 - The website is not deployed and is not online.
 - There is no purchased domain, so custom DNS and domain HTTPS cannot be set up yet.
 - A real TiDB connection, production migrations, admin account, login, regional PDF output, and deployed smoke tests remain to be done after hosting accounts and a domain are ready.

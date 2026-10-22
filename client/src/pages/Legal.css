@@ -1,0 +1,100 @@
+/* ==========================================================================
+   LEGAL PAGES STYLES (PRIVACY & TERMS)
+   ========================================================================== */
+
+.legal-page {
+  background-color: var(--color-cream);
+}
+
+.legal-content-section {
+  padding: 4.5rem 0 6rem 0;
+}
+
+.legal-document {
+  max-width: 860px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid var(--color-cream-border);
+  border-radius: var(--radius-lg);
+  padding: 3.5rem;
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text-primary);
+}
+
+.legal-updated {
+  display: inline-block;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-cream-border);
+  width: 100%;
+}
+
+.legal-document h2 {
+  font-size: 1.5rem;
+  color: var(--color-forest-dark);
+  margin: 2.25rem 0 1rem 0;
+  letter-spacing: -0.01em;
+}
+
+.legal-document h2:first-of-type {
+  margin-top: 0;
+}
+
+.legal-document p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.legal-document ul {
+  margin: 0 0 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.legal-document li {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.legal-document li strong {
+  color: var(--color-forest-dark);
+}
+
+.legal-document code {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-cream-border);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-wood-dark);
+  font-weight: 600;
+}
+
+.legal-document a {
+  color: var(--color-forest);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.legal-document a:hover {
+  color: var(--color-wood);
+}
+
+@media (max-width: 768px) {
+  .legal-document {
+    padding: 2rem 1.5rem;
+  }
+
+  .legal-document h2 {
+    font-size: 1.3rem;
+  }
+}

@@ -1,0 +1,115 @@
+.timber-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.timber-btn:focus-visible {
+  outline: 2px solid var(--color-wood-light);
+  outline-offset: 2px;
+}
+
+/* Sizes */
+.timber-btn--sm {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+}
+
+.timber-btn--md {
+  font-size: 0.95rem;
+  padding: 0.75rem 1.4rem;
+}
+
+.timber-btn--lg {
+  font-size: 1.05rem;
+  padding: 0.95rem 1.85rem;
+  border-radius: var(--radius-lg);
+}
+
+.timber-btn--full {
+  width: 100%;
+}
+
+/* Variants */
+.timber-btn--primary {
+  background-color: var(--color-forest);
+  color: #ffffff;
+  border-color: var(--color-forest-dark);
+  box-shadow: 0 4px 12px rgba(25, 56, 38, 0.22);
+}
+
+.timber-btn--primary:hover:not(:disabled) {
+  background-color: var(--color-forest-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(25, 56, 38, 0.32);
+}
+
+.timber-btn--wood {
+  background-color: var(--color-wood);
+  color: #ffffff;
+  border-color: var(--color-wood-dark);
+  box-shadow: 0 4px 12px rgba(139, 83, 39, 0.25);
+}
+
+.timber-btn--wood:hover:not(:disabled) {
+  background-color: var(--color-wood-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(139, 83, 39, 0.35);
+}
+
+.timber-btn--outline {
+  background-color: transparent;
+  color: var(--color-forest);
+  border-color: var(--color-forest);
+}
+
+.timber-btn--outline:hover:not(:disabled) {
+  background-color: var(--color-forest-soft);
+  color: var(--color-forest-dark);
+}
+
+.timber-btn--white {
+  background-color: #ffffff;
+  color: var(--color-forest-dark);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.timber-btn--white:hover:not(:disabled) {
+  background-color: var(--color-cream);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+
+.timber-btn--ghost {
+  background-color: transparent;
+  color: var(--color-cream);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.timber-btn--ghost:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.timber-btn--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.timber-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

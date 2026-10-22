@@ -1,0 +1,8 @@
+{
+  "language": { "select": "ꯂꯣꯟ" },
+  "coverage": { "incomplete": "ꯑꯦꯞ ꯑꯁꯤꯒꯤ ꯃꯈꯜ ꯈꯔ ꯍꯧꯖꯤꯛꯁꯨ ꯏꯪꯂꯤꯁꯇ ꯂꯩ। ꯑꯇꯩ ꯂꯣꯟꯁꯤꯡ ꯍꯥꯞꯆꯤꯟꯒꯅꯤ।" },
+  "nav": { "main": "ꯃꯔꯨ ꯃꯦꯅꯨ", "home": "ꯌꯨꯝ", "about": "ꯑꯩꯈꯣꯌꯒꯤ ꯃꯔꯃꯗ", "products": "ꯐꯪꯐꯝ", "services": "ꯊꯕꯛꯁꯤꯡ", "quote": "ꯃꯃꯜ ꯍꯪꯕꯤꯌꯨ", "contact": "ꯄꯥꯎ ꯐꯥꯎ", "openMenu": "ꯃꯦꯅꯨ ꯍꯥꯡꯗꯣꯛꯄ", "closeMenu": "ꯃꯦꯅꯨ ꯂꯣꯠꯄ", "mobile": "ꯃꯣꯕꯥꯏꯜ ꯃꯦꯅꯨ", "closeNavigation": "ꯃꯦꯅꯨ ꯂꯣꯠꯄ" },
+  "footer": { "about": "ꯐꯪꯕ ꯎ ꯌꯦꯡꯉꯨ ꯑꯃꯁꯨꯡ ꯑꯩꯈꯣꯌꯗ ꯄꯥꯎ ꯊꯥꯕꯤꯌꯨ।", "browse": "ꯌꯦꯡꯉꯨ", "availableProducts": "ꯐꯪꯕ ꯐꯪꯐꯝ", "getInTouch": "ꯄꯥꯎ ꯐꯥꯎ", "askPrice": "ꯃꯃꯜ ꯍꯪꯕꯤꯌꯨ", "privacy": "ꯑꯀꯤꯕ ꯆꯠꯅꯕ", "terms": "ꯊꯕꯛꯀꯤ ꯆꯠꯅꯕ" },
+  "admin": { "summary": "ꯊꯧꯗꯥꯡꯒꯤ ꯂꯥꯏꯁꯣꯟ", "stock": "ꯎ ꯁ꯭ꯇꯣꯛ", "purchases": "ꯎ ꯂꯧꯕ", "customers": "ꯀꯥꯁ꯭ꯇꯃꯔ", "sellers": "ꯎ ꯊꯣꯛꯄ", "cutting": "ꯎ ꯀꯥꯞꯄ ꯊꯕꯛ", "orders": "ꯀꯥꯁ꯭ꯇꯃꯔ ꯑꯣꯔꯗꯔ", "invoices": "ꯕꯤꯜ", "payments": "ꯄꯦꯃꯦꯟꯇ", "costs": "ꯊꯧꯗꯥꯡ ꯆꯥꯗꯕ", "employees": "ꯊꯕꯛ ꯇꯧꯕ", "deliveries": "ꯊꯥꯒꯠꯄ ꯃꯔꯣꯜ", "enquiries": "ꯍꯪꯕ", "reports": "ꯊꯧꯗꯥꯡ ꯔꯤꯄꯣꯔꯠ", "users": "ꯌꯨꯖꯔ ꯌꯦꯡꯁꯤꯟꯕ", "settings": "ꯁꯦꯠꯇꯤꯡ", "millWork": "ꯃꯤꯜ ꯊꯕꯛ", "openWebsite": "ꯃꯤꯌꯥꯝꯒꯤ ꯋꯦꯕꯁꯥꯏꯠ ꯍꯥꯡꯗꯣꯛꯄ", "search": "ꯎ ꯁ꯭ꯇꯣꯛ ꯊꯤꯌꯨ (Enter ꯅꯝꯃꯨ)...", "millSettings": "ꯃꯤꯜ ꯁꯦꯠꯇꯤꯡ", "openCustomerWebsite": "ꯀꯥꯁ꯭ꯇꯃꯔ ꯋꯦꯕꯁꯥꯏꯠ ꯍꯥꯡꯗꯣꯛꯄ", "logout": "ꯂꯣꯒ ꯑꯥꯎꯠ", "openNavigation": "ꯃꯦꯅꯨ ꯍꯥꯡꯗꯣꯛꯄ", "closeNavigation": "ꯃꯦꯅꯨ ꯂꯣꯠꯄ", "expandSidebar": "ꯈꯣꯡ ꯃꯦꯅꯨ ꯌꯥꯝꯍꯟꯕ", "collapseSidebar": "ꯈꯣꯡ ꯃꯦꯅꯨ ꯆꯥꯎꯊꯣꯛꯄ", "navigationLabel": "ꯁꯥ ꯃꯤꯜ ꯃꯦꯅꯨ" },
+  "login": { "subtitle": "ꯁꯥ ꯃꯤꯜ ꯃꯦꯅꯦꯖꯃꯦꯟꯠ", "sessionExpired": "ꯅꯍꯥꯛꯀꯤ ꯁꯦꯁꯟ ꯂꯣꯏꯔꯦ। ꯑꯃꯨꯛ ꯂꯣꯒꯤꯟ ꯇꯧꯕꯤꯌꯨ।", "email": "ꯁ꯭ꯇꯥꯐ ꯏꯃꯦꯜ", "password": "ꯄꯥꯁꯋꯥꯔꯗ", "signIn": "ꯂꯣꯒꯤꯟ ꯇꯧꯕꯤꯌꯨ", "signingIn": "ꯃꯔꯣꯜ ꯌꯦꯡꯂꯤ...", "returnPublic": "TimberCraft ꯋꯦꯕꯁꯥꯏꯠꯇ ꯍꯜꯂꯨ", "loginFailed": "ꯂꯣꯒꯤꯟ ꯌꯥꯗꯦ। ꯏꯃꯦꯜ ꯑꯃꯁꯨꯡ ꯄꯥꯁꯋꯥꯔꯗ ꯌꯦꯡꯉꯨ।", "networkError": "ꯂꯣꯒꯤꯟ ꯌꯥꯗꯦ। ꯏꯟꯇꯔꯅꯦꯠ ꯀꯅꯦꯛꯁꯟ ꯌꯦꯡꯉꯨ।" }
+}

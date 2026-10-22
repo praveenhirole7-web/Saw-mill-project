@@ -1,0 +1,263 @@
+/* ==========================================================================
+   QUOTE REQUEST PAGE STYLES
+   ========================================================================== */
+
+.quote-page {
+  background-color: var(--color-cream);
+}
+
+.quote-form-section {
+  padding: 4rem 0 5rem 0;
+}
+
+.quote-page-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+.quote-form-card {
+  width: min(100%, 820px);
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  box-shadow: var(--shadow-md);
+}
+
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-cream-border);
+}
+
+.form-section-icon {
+  color: var(--color-forest);
+  flex-shrink: 0;
+}
+
+.form-section-header h3 {
+  font-size: 1.35rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 0.2rem;
+}
+
+.form-section-header p {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 1.25rem;
+}
+
+.quote-form-actions {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-cream-dark);
+}
+
+/* Success Panel */
+.quote-success-panel {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.quote-success-icon {
+  margin-bottom: 1.25rem;
+}
+
+.quote-success-title {
+  font-size: 1.8rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 0.5rem;
+}
+
+.quote-success-text {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.quote-reference-badge {
+  display: inline-block;
+  background-color: var(--color-forest-soft);
+  color: var(--color-forest);
+  font-family: monospace;
+  font-size: 1.35rem;
+  font-weight: 800;
+  padding: 0.5rem 1.75rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(25, 56, 38, 0.2);
+}
+
+.quote-summary-details {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-cream-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.92rem;
+}
+
+.quote-summary-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.quote-summary-row strong {
+  color: var(--color-forest-dark);
+}
+
+.quote-followup-text {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* Sidebar cards */
+.quote-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.quote-help-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-cream-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.quote-help-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.15rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 0.75rem;
+}
+
+.quote-help-icon {
+  color: var(--color-forest);
+}
+
+.quote-help-card p {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1rem;
+}
+
+.cbf-formula-box {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-cream-border);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+}
+
+.cbf-formula-box strong {
+  display: block;
+  color: var(--color-wood-dark);
+  margin-bottom: 0.25rem;
+}
+
+.cbf-formula-box code {
+  color: var(--color-forest);
+  font-weight: 700;
+}
+
+.quote-guarantee-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+}
+
+.quote-guarantee-list strong {
+  color: var(--color-forest-dark);
+}
+
+.quote-help-card--contact {
+  background: linear-gradient(135deg, var(--color-forest) 0%, var(--color-forest-dark) 100%);
+  color: #ffffff;
+  border-left: 5px solid var(--color-wood);
+}
+
+.quote-help-card--contact .quote-help-title {
+  color: #ffffff;
+}
+
+.quote-help-card--contact .quote-help-icon {
+  color: var(--color-wood-light);
+}
+
+.quote-help-card--contact p {
+  color: #d1dbd4;
+  margin-bottom: 0.75rem;
+}
+
+.quote-phone-link {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-decoration: none;
+  margin-bottom: 0.4rem;
+}
+
+.quote-phone-link:hover {
+  text-decoration: underline;
+  color: var(--color-wood-light);
+}
+
+.quote-hours-note {
+  font-size: 0.78rem;
+  color: #a4b4ab;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .quote-page-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .quote-form-card {
+    padding: 1.75rem;
+  }
+  .form-row-2,
+  .form-row-3 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "language": { "select": "Language" },
+  "coverage": { "incomplete": "Some parts of this app are still in English. More translations are being added." },
+  "nav": {
+    "main": "Main navigation", "home": "Home", "about": "About", "products": "Products",
+    "services": "Services", "quote": "Ask for a Price", "contact": "Contact",
+    "openMenu": "Open Menu", "closeMenu": "Close Menu", "mobile": "Mobile navigation",
+    "closeNavigation": "Close navigation menu", "staffLogin": "Staff Login"
+  },
+  "footer": {
+    "about": "Check what wood is available and send us a message.",
+    "browse": "Browse", "availableProducts": "Available products", "getInTouch": "Get in Touch",
+    "askPrice": "Ask for a price", "privacy": "Privacy Policy", "terms": "Terms of Service"
+  },
+  "admin": {
+    "summary": "Business Summary", "stock": "Wood Stock", "purchases": "Wood Purchases",
+    "woodTypes": "Wood Types",
+    "customers": "Customers", "sellers": "Wood Sellers", "cutting": "Wood Cutting Work",
+    "orders": "Customer Orders", "invoices": "Invoices", "payments": "Payments",
+    "costs": "Business Costs", "employees": "Employees", "deliveries": "Delivery Details",
+    "enquiries": "Enquiries", "reports": "Business Reports", "users": "Manage Users",
+    "settings": "Settings", "millWork": "Mill Work", "openWebsite": "Open Public Website",
+    "search": "Search wood stock (press Enter)...", "millSettings": "Mill Settings",
+    "openCustomerWebsite": "Open Customer Website", "logout": "Log out",
+    "openNavigation": "Open navigation menu", "closeNavigation": "Close navigation",
+    "expandSidebar": "Expand sidebar", "collapseSidebar": "Collapse sidebar",
+    "navigationLabel": "Sawmill Admin Navigation"
+  },
+  "login": {
+    "subtitle": "Staff sign in", "sessionExpired": "Your session has expired. Please log in again.",
+    "email": "Staff Email Address", "password": "Password", "signIn": "Sign In",
+    "signingIn": "Checking details...", "returnPublic": "Return to TimberCraft website",
+    "loginFailed": "Login failed. Please check your email and password.",
+    "networkError": "Could not log in. Please check your internet connection."
+  },
+  "woodSpecies": {
+    "hint": "Choose a familiar wood name, or enter the scientific name. Names marked * are not verified; confirm the exact species with the seller before official records.",
+    "rosewoodNote": "Rosewood names can refer to different tree species. Confirm the exact species before recording it.",
+    "teak": "Teak",
+    "neem": "Neem",
+    "sandalwood": "Sandalwood",
+    "eucalyptus": "Eucalyptus",
+    "mango": "Mango",
+    "jackfruit": "Jackfruit",
+    "bamboo": "Bamboo",
+    "rosewood": "Rosewood",
+    "shisham": "Shisham",
+    "sal": "Sal",
+    "deodar": "Deodar",
+    "pine": "Pine",
+    "acacia": "Acacia",
+    "silverOak": "Silver Oak",
+    "tamarind": "Tamarind",
+    "honge": "Honge / Indian Beech"
+  }
+}

@@ -1,0 +1,306 @@
+/* ==========================================================================
+   SERVICES PAGE STYLES
+   ========================================================================== */
+
+.services-page {
+  background-color: var(--color-cream);
+}
+
+.services-list-section {
+  padding: 4.5rem 0 5rem 0;
+}
+
+.services-stacked-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.service-detail-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-cream-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.service-detail-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-wood-light);
+}
+
+.service-detail-card--reversed {
+  grid-template-columns: 0.85fr 1.15fr;
+}
+
+.service-detail-card--reversed .service-detail-card__content {
+  order: 2;
+}
+
+.service-detail-card--reversed .service-detail-card__visual {
+  order: 1;
+}
+
+.service-detail-card__content {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-detail-card__badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.service-pill {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background-color: var(--color-forest-soft);
+  color: var(--color-forest);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.service-turnaround {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.service-detail-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.service-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-forest) 0%, var(--color-forest-dark) 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.service-detail-title {
+  font-size: 1.6rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 0.15rem;
+  line-height: 1.2;
+}
+
+.service-detail-tagline {
+  font-size: 0.88rem;
+  color: var(--color-wood);
+  font-weight: 600;
+}
+
+.service-detail-desc {
+  font-size: 0.98rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+
+.service-specs-box {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-cream-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.service-spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.service-spec-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.service-spec-value {
+  font-size: 0.95rem;
+  color: var(--color-forest-dark);
+}
+
+.service-capabilities {
+  margin-bottom: 2rem;
+}
+
+.service-capabilities h4 {
+  font-size: 0.95rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.service-cap-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.service-cap-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  line-height: 1.45;
+}
+
+.service-cap-check {
+  color: var(--color-forest);
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.service-detail-action {
+  margin-top: auto;
+}
+
+/* Visual Column */
+.service-detail-card__visual {
+  background-color: var(--color-cream-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.service-photo-frame {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.service-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.service-photo-overlay {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  background: rgba(15, 35, 24, 0.88);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* Machinery Section */
+.services-machinery-section {
+  padding: 5rem 0;
+  background-color: #ffffff;
+}
+
+.machinery-card {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-cream-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  gap: 1.25rem;
+  transition: transform var(--transition-normal);
+}
+
+.machinery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-wood-light);
+}
+
+.machinery-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-wood-soft);
+  color: var(--color-wood);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.machinery-card__title {
+  font-size: 1.2rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 0.35rem;
+}
+
+.machinery-card__desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+/* Bottom CTA */
+.services-cta-section {
+  background: linear-gradient(135deg, var(--color-forest-dark) 0%, var(--color-forest) 100%);
+  padding: 4.5rem 0;
+  color: #ffffff;
+  border-top: 3px solid var(--color-wood);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .service-detail-card,
+  .service-detail-card--reversed {
+    grid-template-columns: 1fr;
+  }
+  .service-detail-card--reversed .service-detail-card__content {
+    order: 1;
+  }
+  .service-detail-card--reversed .service-detail-card__visual {
+    order: 2;
+  }
+  .service-detail-card__visual {
+    height: 300px;
+  }
+  .service-detail-card__content {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .service-specs-box {
+    grid-template-columns: 1fr;
+  }
+}

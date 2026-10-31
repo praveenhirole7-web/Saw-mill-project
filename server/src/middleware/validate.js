@@ -64,14 +64,16 @@ function validateBody(schema) {
 // ── Pre-defined schemas ───────────────────────────────────────────────────────
 
 const loginSchema = {
-  email:    { required: true, type: 'email',  maxLength: 150 },
+  email:    { type: 'email', maxLength: 150 },
+  identifier: { type: 'string', maxLength: 150 },
+  expectedRole: { type: 'string', enum: ['admin', 'staff'] },
   password: { required: true, type: 'string', minLength: 1, maxLength: 128 },
 };
 
 const createUserSchema = {
   username: { required: true, type: 'string', minLength: 3, maxLength: 100 },
   email:    { required: true, type: 'email',  maxLength: 150 },
-  password: { required: true, type: 'string', minLength: 8, maxLength: 128 },
+  password: { required: true, type: 'string', minLength: 12, maxLength: 128 },
 };
 
 module.exports = { validateBody, loginSchema, createUserSchema };

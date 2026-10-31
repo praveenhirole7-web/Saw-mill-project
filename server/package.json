@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "node --test test/auth.test.js test/inventory.test.js test/purchases.test.js test/cuttingJobs.test.js test/salesOrders.test.js test/invoices.test.js test/expensesEmployees.test.js test/deliveriesEnquiries.test.js test/reports.test.js test/catalog.test.js test/woodTypes.test.js"
+    "setup:owner": "node scripts/setupOwner.js",
+    "test": "node --test test/auth.test.js test/inventory.test.js test/purchases.test.js test/cuttingJobs.test.js test/salesOrders.test.js test/invoices.test.js test/expensesEmployees.test.js test/deliveriesEnquiries.test.js test/reports.test.js test/catalog.test.js test/woodTypes.test.js test/e2eFullWorkflow.test.js"
   },
   "keywords": [
     "sawmill",

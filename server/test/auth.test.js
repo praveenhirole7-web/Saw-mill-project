@@ -38,25 +38,36 @@ const db = require('../src/config/db');
 // In-memory mock database state
 let mockUsers = [];
 let mockRefreshTokens = [];
+let mockRevokedAccessTokens = [];
 let mockAuditLogs = [];
 
 // Mock query router
 db.query = async (sql, params = []) => {
   const norm = sql.replace(/\s+/g, ' ').trim().toLowerCase();
 
+  if (norm.startsWith('insert ignore into revoked_access_tokens')) {
+    mockRevokedAccessTokens.push({ token_hash: params[0], expires_at: params[1] });
+    return [{ affectedRows: 1 }];
+  }
+  if (norm.includes('from revoked_access_tokens')) {
+    return [mockRevokedAccessTokens.filter((token) => token.token_hash === params[0])];
+  }
+
   // 1. SELECT user by email (login)
   if (norm.includes('from users u') && norm.includes('where lower(u.email) = ?')) {
     const email = String(params[0]).toLowerCase();
-    const found = mockUsers.find((u) => u.email.toLowerCase() === email);
+    const found = mockUsers.find((u) => u.email.toLowerCase() === email || u.username.toLowerCase() === email || String(u.employee_id || '') === email);
     if (!found) return [[]];
     return [[{
       id: found.id,
       username: found.username,
       email: found.email,
+      employee_id: found.employee_id || null,
       password_hash: found.password_hash,
       status: found.status,
       created_at: found.created_at,
       role: found.role,
+      permission_override: found.permissionOverride || false,
       permissions: found.permissions.join(','),
     }]];
   }
@@ -81,9 +92,11 @@ db.query = async (sql, params = []) => {
       id: found.id,
       username: found.username,
       email: found.email,
+      employee_id: found.employee_id || null,
       status: found.status,
       created_at: found.created_at,
       role: found.role,
+      permission_override: found.permissionOverride || false,
       permissions: found.permissions.join(','),
     }]];
   }
@@ -119,6 +132,11 @@ db.query = async (sql, params = []) => {
   }
 
   // 7. Check username/email uniqueness (createUser)
+  if (norm.includes('from users where lower(username) = ?')) {
+    const uname = String(params[0]).toLowerCase();
+    const email = params[2] ? String(params[2]).toLowerCase() : null;
+    return [mockUsers.filter((u) => u.username.toLowerCase() === uname || (email && u.email.toLowerCase() === email))];
+  }
   if (norm.includes('from users where lower(email) = ? or lower(username) = ?')) {
     const email = String(params[0]).toLowerCase();
     const uname = String(params[1]).toLowerCase();
@@ -139,6 +157,9 @@ db.query = async (sql, params = []) => {
     if (name === 'operator') return [[{ id: 2, name: 'operator' }]];
     return [[]];
   }
+  if (norm.includes("from roles where name = 'operator'")) return [[{ id: 2, name: 'operator' }]];
+
+  if (norm.startsWith('insert into staff_registration_requests')) return [{ insertId: 1 }];
 
   // 9. INSERT INTO users
   if (norm.startsWith('insert into users')) {
@@ -149,8 +170,8 @@ db.query = async (sql, params = []) => {
       password_hash: params[2],
       role_id: params[3],
       role: params[3] === 1 ? 'admin' : 'operator',
-      status: params[4] || 'active',
-      permissions: params[3] === 1 ? ['manage_users', 'view_inventory'] : ['view_inventory'],
+      status: norm.includes("'pending'") ? 'pending' : (params[5] || params[4] || 'active'),
+      permissions: norm.includes("'pending'") ? [] : (params[3] === 1 ? ['manage_users', 'view_inventory'] : ['view_inventory']),
       created_at: new Date(),
     };
     mockUsers.push(newUser);
@@ -171,6 +192,7 @@ db.query = async (sql, params = []) => {
 
   return [[]];
 };
+db.withTransaction = async (callback) => callback({ execute: db.query });
 
 const app = require('../src/server');
 let server;
@@ -190,7 +212,7 @@ before(async () => {
       role: 'admin',
       role_id: 1,
       status: 'active',
-      permissions: ['manage_users', 'view_inventory', 'manage_inventory'],
+      permissions: ['manage_users', 'manage_staff', 'view_inventory', 'manage_inventory'],
       created_at: new Date(),
     },
     {
@@ -202,6 +224,7 @@ before(async () => {
       role_id: 2,
       status: 'active',
       permissions: ['view_inventory'],
+      permissionOverride: true,
       created_at: new Date(),
     },
     {
@@ -213,6 +236,39 @@ before(async () => {
       role_id: 2,
       status: 'inactive',
       permissions: ['view_inventory'],
+      created_at: new Date(),
+    },
+    {
+      id: 4,
+      username: 'pending_staff',
+      email: 'pending@sawmill.local',
+      password_hash: operatorHash,
+      role: 'operator',
+      role_id: 2,
+      status: 'pending',
+      permissions: [],
+      created_at: new Date(),
+    },
+    {
+      id: 5,
+      username: 'rejected_staff',
+      email: 'rejected@sawmill.local',
+      password_hash: operatorHash,
+      role: 'operator',
+      role_id: 2,
+      status: 'rejected',
+      permissions: [],
+      created_at: new Date(),
+    },
+    {
+      id: 6,
+      username: 'mill_owner',
+      email: 'owner@sawmill.local',
+      password_hash: adminHash,
+      role: 'owner',
+      role_id: 3,
+      status: 'active',
+      permissions: ['manage_admins', 'manage_staff', 'manage_settings', 'view_inventory'],
       created_at: new Date(),
     },
   ];
@@ -277,7 +333,7 @@ describe('Saw Mill Authentication & Authorization Tests', () => {
     assert.equal(res.body.data.user.email, 'admin@sawmill.local');
     assert.equal(res.body.data.user.role, 'admin');
     assert.equal(res.body.data.user.password_hash, undefined, 'password_hash must never be returned');
-    assert.ok(res.body.data.accessToken, 'Access token returned in body');
+    assert.equal(res.body.data.accessToken, undefined, 'access token is only sent in the HttpOnly cookie');
 
     // Verify HttpOnly cookies
     const cookieHeaders = res.cookies.join('; ');
@@ -298,6 +354,84 @@ describe('Saw Mill Authentication & Authorization Tests', () => {
     assert.equal(res.status, 401);
     assert.equal(res.body.success, false);
     assert.equal(res.body.code, 'INVALID_CREDENTIALS');
+  });
+
+  test('Admin credentials are rejected at the staff login endpoint', async () => {
+    const res = await apiRequest('/api/v1/auth/login', {
+      method: 'POST', body: { identifier: 'admin', password: 'CorrectAdminPass123!', expectedRole: 'staff' }
+    });
+    assert.equal(res.status, 403);
+    assert.equal(res.body.code, 'ROLE_LOGIN_MISMATCH');
+  });
+
+  test('Owner signs in through the admin login endpoint', async () => {
+    const res = await apiRequest('/api/v1/auth/login', { method: 'POST', body: { identifier: 'mill_owner', password: 'CorrectAdminPass123!', expectedRole: 'admin' } });
+    assert.equal(res.status, 200);
+    assert.equal(res.body.data.user.role, 'owner');
+  });
+
+  test('An administrator without manage_admins cannot create another admin', async () => {
+    const token = jwt.sign({ sub: 1, role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '15m', issuer: 'sawmill-api' });
+    const res = await apiRequest('/api/v1/auth/admins', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: {
+      username: 'another_admin', email: 'another@sawmill.local', password: 'AnotherStrongPassword123!'
+    } });
+    assert.equal(res.status, 403);
+    assert.equal(res.body.code, 'OWNER_REQUIRED');
+  });
+
+  test('Staff can sign in with username at the staff login endpoint', async () => {
+    const res = await apiRequest('/api/v1/auth/login', {
+      method: 'POST', body: { identifier: 'operator_bob', password: 'OperatorPass123!', expectedRole: 'staff' }
+    });
+    assert.equal(res.status, 200);
+    assert.equal(res.body.data.user.role, 'operator');
+  });
+
+  test('Pending and rejected registration accounts cannot sign in', async () => {
+    const pending = await apiRequest('/api/v1/auth/login', { method: 'POST', body: { identifier: 'pending_staff', password: 'OperatorPass123!', expectedRole: 'staff' } });
+    const rejected = await apiRequest('/api/v1/auth/login', { method: 'POST', body: { identifier: 'rejected_staff', password: 'OperatorPass123!', expectedRole: 'staff' } });
+    assert.equal(pending.status, 403);
+    assert.equal(pending.body.code, 'ACCOUNT_PENDING');
+    assert.equal(rejected.status, 403);
+    assert.equal(rejected.body.code, 'ACCOUNT_REJECTED');
+  });
+
+  test('Public staff registration creates a pending staff account and ignores submitted role permissions', async () => {
+    const res = await apiRequest('/api/v1/auth/staff-registration', { method: 'POST', body: {
+      name: 'New Saw Operator', phone: '555-0101', email: 'newstaff@sawmill.local', department: 'Saw Operator',
+      username: 'new_saw_operator', password: 'LongStaffPassword123!', role: 'admin', permissions: ['manage_admins']
+    } });
+    assert.equal(res.status, 201);
+    const created = mockUsers.find((u) => u.username === 'new_saw_operator');
+    assert.equal(created.role, 'operator');
+    assert.equal(created.status, 'pending');
+    assert.deepEqual(created.permissions, []);
+  });
+
+  test('Staff inventory API access honors per-account grants on direct requests', async () => {
+    const token = jwt.sign({ sub: 2 }, process.env.JWT_SECRET, { expiresIn: '15m', issuer: 'sawmill-api' });
+    const allowed = await apiRequest('/api/v1/inventory', { headers: { Authorization: `Bearer ${token}` } });
+    const denied = await apiRequest('/api/v1/inventory/1/receipt', {
+      method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: { quantity: 1, reason: 'test' }
+    });
+    assert.equal(allowed.status, 200);
+    assert.equal(denied.status, 403);
+    assert.equal(denied.body.code, 'INSUFFICIENT_PERMISSION');
+  });
+
+  test('Logout revokes the access session as well as its refresh session', async () => {
+    const login = await apiRequest('/api/v1/auth/login', {
+      method: 'POST', body: { email: 'admin@sawmill.local', password: 'CorrectAdminPass123!' }
+    });
+    const cookies = login.cookies.map((cookie) => cookie.split(';')[0]).join('; ');
+    const logout = await apiRequest('/api/v1/auth/logout', {
+      method: 'POST', headers: { Cookie: cookies, 'X-Requested-With': 'XMLHttpRequest' }, body: {}
+    });
+    const accessCookie = cookies.split('; ').find((cookie) => cookie.startsWith('access_token='));
+    const afterLogout = await apiRequest('/api/v1/auth/me', { headers: { Cookie: accessCookie } });
+    assert.equal(logout.status, 200);
+    assert.equal(afterLogout.status, 401);
+    assert.equal(afterLogout.body.code, 'TOKEN_REVOKED');
   });
 
   // Test 3: Inactive Account

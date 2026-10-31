@@ -144,9 +144,9 @@ mysql -u root -p < server/database/schema.sql
 ```
 *(Alternatively, copy and paste the contents of `server/database/schema.sql` into MySQL Workbench or phpMyAdmin)*
 
-### Step 2a: Create the first administrator
+### Step 2a: Create the first owner
 
-There is no public registration page. After creating the database, create the first staff administrator from the server using the secure bootstrap script. From PowerShell:
+After applying the listed migrations, create the first mill owner from the server using the secure bootstrap script. From PowerShell:
 
 ```powershell
 cd server
@@ -158,7 +158,7 @@ Remove-Item Env:ADMIN_PASSWORD
 cd ..
 ```
 
-Use your own email and a unique password. Then start the app with `npm run dev`, open `http://localhost:5173/login`, and sign in with those credentials. Do not commit the password or place it in the source code. See [server/ADMIN_SETUP.md](server/ADMIN_SETUP.md) for details. Staff can then open **Inventory** and choose **Add Inventory Batch** to record raw logs or finished timber.
+Use your own email and a unique password. Then start the app with `npm run dev`, open `http://localhost:5173/login`, choose **Admin Login**, and sign in with those credentials. Do not commit the password or place it in the source code. See [server/ADMIN_SETUP.md](server/ADMIN_SETUP.md) for details. The initial account has the OWNER role. The owner creates administrators with individual permissions and manages staff accounts. The login screen offers **Staff Registration**; requests remain pending until an authorized administrator reviews them and assigns permissions. Pending and rejected requests cannot sign in.
 
 Existing installations should apply `server/database/003_billing_sequences_and_idempotency.sql` once after the initial schema. It adds concurrency-safe billing number sequences and payment idempotency/balance snapshots.
 
@@ -166,11 +166,13 @@ Existing installations should also apply `server/database/004_expenses_and_emplo
 
 Existing installations should also apply `server/database/005_deliveries_and_enquiries.sql` once. It creates delivery tracking and public enquiry tables and grants delivery/enquiry permissions. A delivery can be scheduled only once for a completed (fully inventory-fulfilled) sales order; delivery transitions and customer/staff enquiry changes are retained in history. Staff can convert qualified enquiries into customers or draft quotations.
 
+Existing installations should apply `server/database/011_staff_permissions.sql` after migration 010. It adds per-account permission overrides, the owner role, and staff registration approval storage. Fresh installations also run this migration after loading `server/database/schema.sql`. Staff permissions take effect on every protected API request; changing permissions applies immediately and requires a fresh sign-in for the updated UI.
+
 Public quote and contact forms submit to `/api/v1/enquiries/public`. The endpoint validates input, rejects its honeypot field, and permits up to five requests per IP address per 15-minute window using the Express in-memory rate-limit store. Deployments with multiple server instances should configure a shared rate-limit store; deployments behind a reverse proxy should configure Express `trust proxy` for the actual proxy topology so client IP limits are reliable. Staff enquiry data, including messages and internal notes, is available only through authenticated permission-protected endpoints.
 
 The public product catalogue is served by `GET /api/v1/catalog/products`. It exposes only available, mill-owned sawn-timber listings and does not expose customer-owned inventory, internal batch identifiers, or cost prices. Quote, contact, and service submissions are stored through the enquiries endpoint; references shown to users come from the API response.
 
-The client uses `VITE_API_BASE_URL` (for example, `http://localhost:5000/api`) for all API requests, including authentication refreshes and PDF/report downloads. This variable is public configuration and must not contain server secrets. Administrative user listing and creation use admin-only `/api/v1/auth/users` endpoints. Mill settings and notification controls are not presented as working features because the server currently has no persistent API for them.
+The client uses `VITE_API_BASE_URL` (for example, `http://localhost:5000/api`) for all API requests, including authentication refreshes and PDF/report downloads. This variable is public configuration and must not contain server secrets. Staff registrations remain pending until approved by an administrator. Admin creation and management are limited to the owner or an admin explicitly granted `manage_admins`. Mill settings and notification controls are not presented as working features because the server currently has no persistent API for them.
 
 Existing installations should apply `server/database/006_reporting_fifo_costing.sql` once after migration 005. It adds sales-line fulfillment cost snapshots, creates the reporting costing setting, and grants `view_reports` to administrators, managers, and accountants. Fresh installations receive the same tables and grants from `server/database/schema.sql`. Reports and dashboard data are served by authenticated `/api/v1/reports` endpoints; the report catalogue, data, CSV, and PDF exports all require `view_reports`.
 

@@ -58,7 +58,7 @@ export function AuthProvider({ children }) {
     checkAuthStatus();
   }, [checkAuthStatus]);
 
-  const login = async (email, password) => {
+  const login = async (identifier, password, expectedRole) => {
     setAuthError(null);
     setSessionExpired(false);
 
@@ -66,7 +66,7 @@ export function AuthProvider({ children }) {
       const body = await apiRequest({
         url: '/api/v1/auth/login',
         method: 'POST',
-        data: { email: email.trim(), password },
+        data: { identifier: identifier.trim(), password, expectedRole },
         skipAuthRefresh: true
       });
 

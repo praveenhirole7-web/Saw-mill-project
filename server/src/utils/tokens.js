@@ -55,7 +55,7 @@ function getSameSiteSetting() {
  */
 function createAccessToken(user, expiresIn = ACCESS_EXPIRY) {
   return jwt.sign(
-    { sub: user.id, email: user.email, role: user.role },
+    { sub: user.id, email: user.email, role: user.role, ver: user.tokenVersion ?? 0 },
     getAccessSecret(),
     { expiresIn, issuer: 'sawmill-api' }
   );

@@ -7,8 +7,8 @@
  *
  * This script:
  *   1. Reads credentials ONLY from environment variables — never from argv.
- *   2. Creates the 'admin' role if it doesn't exist.
- *   3. Creates the admin user if the email doesn't already exist.
+ *   2. Creates the 'owner' role if it doesn't exist.
+ *   3. Creates the initial owner account if the email doesn't already exist.
  *   4. Exits with a non-zero code on failure.
  *
  * There is NO HTTP endpoint that does this — it must be run locally by a
@@ -29,7 +29,7 @@
  *
  * REQUIREMENTS:
  *   • DB env vars (DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME) must be set.
- *   • The current base schema and required catalogue migrations must be applied first.
+ *   • The current base schema and required catalogue/staff-permission migrations must be applied first.
  *   • ADMIN_PASSWORD must be at least 12 characters long.
  */
 
@@ -72,7 +72,7 @@ async function main() {
     process.exit(1);
   }
 
-  // 2. Check for existing admin account
+  // 2. Check for existing account and owner
   const [existing] = await query(
     'SELECT id FROM users WHERE email = ?',
     [ADMIN_EMAIL]
@@ -84,20 +84,23 @@ async function main() {
     process.exit(0);
   }
 
-  // 3. Ensure 'admin' role exists
+  const [owners] = await query("SELECT u.id FROM users u JOIN roles r ON r.id=u.role_id WHERE r.name='owner' AND u.status='active'");
+  if (owners.length) throw new Error('An active owner already exists. Create additional administrators in the application.');
+
+  // 3. Ensure 'owner' role exists
   let adminRoleId;
-  const [roleRows] = await query("SELECT id FROM roles WHERE name = 'admin'");
+  const [roleRows] = await query("SELECT id FROM roles WHERE name = 'owner'");
 
   if (roleRows.length === 0) {
-    console.log("   Creating 'admin' role...");
+    console.log("   Creating 'owner' role...");
     const [roleResult] = await query(
-      "INSERT INTO roles (name, description) VALUES ('admin', 'Full system access')"
+      "INSERT INTO roles (name, description) VALUES ('owner', 'Primary sawmill owner with full control')"
     );
     adminRoleId = roleResult.insertId;
-    console.log(`   ✓ Role 'admin' created (id: ${adminRoleId}).`);
+    console.log(`   ✓ Role 'owner' created (id: ${adminRoleId}).`);
   } else {
     adminRoleId = roleRows[0].id;
-    console.log(`   ✓ Role 'admin' found (id: ${adminRoleId}).`);
+    console.log(`   ✓ Role 'owner' found (id: ${adminRoleId}).`);
   }
 
   // 4. Hash password (cost factor 12 — strong but reasonable for a script)
@@ -111,11 +114,11 @@ async function main() {
     [ADMIN_USERNAME, ADMIN_EMAIL, passwordHash, adminRoleId]
   );
 
-  console.log('\n✅ Administrator account created successfully:');
+  console.log('\n✅ Owner account created successfully:');
   console.log(`   ID       : ${insertResult.insertId}`);
   console.log(`   Username : ${ADMIN_USERNAME}`);
   console.log(`   Email    : ${ADMIN_EMAIL}`);
-  console.log(`   Role     : admin (id: ${adminRoleId})`);
+  console.log(`   Role     : owner (id: ${adminRoleId})`);
   console.log('\n   Log in at  http://localhost:5000  using the credentials you set.\n');
 }
 

@@ -8,6 +8,10 @@ import QuoteModal from './components/quote/QuoteModal';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 const Login = lazy(() => import('./pages/auth/Login'));
+const LoginSelection = lazy(() => import('./pages/auth/LoginSelection'));
+const StaffRegistration = lazy(() => import('./pages/auth/StaffRegistration'));
+const StaffDashboard = lazy(() => import('./pages/auth/StaffDashboard'));
+const StaffLayout = lazy(() => import('./pages/auth/StaffDashboard').then(module => ({ default: module.StaffLayout })));
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Products = lazy(() => import('./pages/Products'));
@@ -94,18 +98,22 @@ function App() {
           <Suspense fallback={<div className="app-route-loading" role="status"><LoadingSpinner message="Loading page…" /></div>}>
           <Routes>
             {/* 1. STANDALONE LOGIN ROUTE */}
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<LoginSelection />} />
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/staff/login" element={<Login />} />
+            <Route path="/staff/register" element={<StaffRegistration />} />
 
             {/* 2. PROTECTED ADMIN DASHBOARD MODULES */}
             <Route
               path="/admin"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute role="admin">
                   <DashboardLayout />
                 </ProtectedRoute>
               }
             >
               <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="inventory" element={<InventoryPage />} />
               <Route path="wood-types" element={<WoodTypesPage />} />
               <Route path="purchases" element={<PurchasesPage />} />
@@ -122,6 +130,18 @@ function App() {
               <Route path="reports" element={<ReportsPage />} />
               <Route path="users" element={<UserManagementPage />} />
               <Route path="settings" element={<SettingsPage />} />
+            </Route>
+
+            <Route path="/staff" element={<ProtectedRoute role="staff"><StaffLayout /></ProtectedRoute>}>
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<StaffDashboard />} />
+              <Route path="inventory" element={<ProtectedRoute role="staff" permission="view_inventory"><InventoryPage /></ProtectedRoute>} />
+              <Route path="purchases" element={<ProtectedRoute role="staff" permission="view_purchases"><PurchasesPage /></ProtectedRoute>} />
+              <Route path="cutting-jobs" element={<ProtectedRoute role="staff" permission="view_cutting_jobs"><CuttingJobsPage /></ProtectedRoute>} />
+              <Route path="sales-orders" element={<ProtectedRoute role="staff" permission="view_sales_orders"><SalesOrdersPage /></ProtectedRoute>} />
+              <Route path="deliveries" element={<ProtectedRoute role="staff" permission="view_deliveries"><DeliveriesPage /></ProtectedRoute>} />
+              <Route path="customers" element={<ProtectedRoute role="staff" permission="view_customers"><CustomersPage /></ProtectedRoute>} />
+              <Route path="payments" element={<ProtectedRoute role="staff" permission="view_payments"><PaymentsPage /></ProtectedRoute>} />
             </Route>
 
             {/* 3. PUBLIC WEBSITE ROUTES */}

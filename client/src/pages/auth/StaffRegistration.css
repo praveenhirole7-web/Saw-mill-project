@@ -1,0 +1,716 @@
+/* ==========================================================================
+   ENTERPRISE STAFF REGISTRATION STYLES
+   Executive-Grade Split-Screen Architecture for Sawmill Enterprise ERP
+   ========================================================================== */
+
+.sr-enterprise-viewport {
+  min-height: 100vh;
+  display: flex;
+  background-color: #f8faf9;
+  font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  color: #111827;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   LEFT HERO BRANDING PANEL (Desktop & Tablet Landscape)
+   ========================================================================== */
+.sr-brand-panel {
+  flex: 0 0 42%;
+  max-width: 580px;
+  min-height: 100vh;
+  background: linear-gradient(145deg, rgba(10, 26, 17, 0.94) 0%, rgba(18, 48, 31, 0.92) 50%, rgba(8, 20, 13, 0.96) 100%),
+              url('/images/custom-cut.jpg') center/cover no-repeat;
+  color: #ffffff;
+  padding: 3.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sr-brand-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+.sr-brand-top {
+  position: relative;
+  z-index: 2;
+}
+
+.sr-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #a7f3d0;
+  backdrop-filter: blur(8px);
+  margin-bottom: 2rem;
+}
+
+.sr-brand-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 2.5rem;
+}
+
+.sr-brand-logo-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.sr-brand-logo-text h2 {
+  font-family: var(--font-heading, inherit);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.sr-brand-logo-text p {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sr-brand-hero {
+  margin-top: 1rem;
+}
+
+.sr-brand-hero h1 {
+  font-family: var(--font-heading, inherit);
+  font-size: 2.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  margin: 0 0 1rem;
+}
+
+.sr-brand-hero p {
+  font-size: 0.95rem;
+  color: #d1d5db;
+  line-height: 1.6;
+  margin: 0 0 2.5rem;
+  max-width: 440px;
+}
+
+/* Trust Pill List */
+.sr-trust-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sr-trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.sr-trust-icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.sr-trust-text h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f3f4f6;
+  margin: 0 0 0.2rem;
+}
+
+.sr-trust-text p {
+  font-size: 0.775rem;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.sr-brand-footer {
+  position: relative;
+  z-index: 2;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* ==========================================================================
+   RIGHT FORM CONTAINER PANEL
+   ========================================================================== */
+.sr-form-panel {
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem 3.5rem;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.sr-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.sr-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.sr-back-home:hover {
+  color: #065f46;
+}
+
+.sr-top-signin-cta {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.sr-top-signin-link {
+  color: #065f46;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 0.35rem;
+  transition: color 150ms ease;
+}
+
+.sr-top-signin-link:hover {
+  color: #047857;
+  text-decoration: underline;
+}
+
+/* Form Shell & Headers */
+.sr-form-container {
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.sr-form-header {
+  margin-bottom: 2rem;
+}
+
+.sr-form-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #059669;
+  margin-bottom: 0.4rem;
+}
+
+.sr-form-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.5rem;
+}
+
+.sr-form-subtitle {
+  font-size: 0.925rem;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Notice Card */
+.sr-notice-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  margin-bottom: 1.75rem;
+}
+
+.sr-notice-icon {
+  color: #15803d;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.sr-notice-text p {
+  font-size: 0.8rem;
+  color: #166534;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.sr-notice-text strong {
+  color: #14532d;
+  font-weight: 600;
+}
+
+/* Form Layout Grid */
+.sr-form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.sr-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sr-section-heading {
+  font-size: 0.825rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sr-section-heading svg {
+  color: #059669;
+}
+
+.sr-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 1.25rem;
+}
+
+.sr-row--single {
+  grid-template-columns: 1fr;
+}
+
+.sr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sr-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.sr-label .sr-req {
+  color: #ef4444;
+  margin-left: 0.2rem;
+}
+
+.sr-label .sr-opt {
+  font-size: 0.725rem;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+/* Form Controls */
+.sr-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sr-input-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: color 150ms ease;
+}
+
+.sr-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 0.85rem 0 2.45rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  transition: all 150ms ease;
+}
+
+.sr-input::placeholder {
+  color: #9ca3af;
+}
+
+.sr-input:focus {
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+}
+
+.sr-input-wrap:focus-within .sr-input-icon {
+  color: #059669;
+}
+
+/* Select Dropdown */
+.sr-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 1rem;
+  padding-right: 2.25rem;
+  cursor: pointer;
+}
+
+/* Password Toggle */
+.sr-input--toggle {
+  padding-right: 2.5rem;
+}
+
+.sr-toggle-btn {
+  position: absolute;
+  right: 0.65rem;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 150ms ease;
+}
+
+.sr-toggle-btn:hover {
+  color: #374151;
+}
+
+/* Field Helper & Password Strength */
+.sr-field-hint {
+  font-size: 0.725rem;
+  color: #6b7280;
+  line-height: 1.35;
+}
+
+.sr-strength-meter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.sr-strength-bars {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+}
+
+.sr-strength-bar {
+  height: 3px;
+  flex: 1;
+  background: #e5e7eb;
+  border-radius: 2px;
+  transition: background-color 200ms ease;
+}
+
+.sr-strength-bar--weak { background: #ef4444; }
+.sr-strength-bar--fair { background: #f59e0b; }
+.sr-strength-bar--good { background: #10b981; }
+
+.sr-strength-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #6b7280;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* Error Alert */
+.sr-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #991b1b;
+  font-size: 0.825rem;
+  font-weight: 500;
+  margin-top: 1.25rem;
+}
+
+/* Action Submit Button */
+.sr-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 44px;
+  margin-top: 1.5rem;
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.925rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: all 150ms ease;
+}
+
+.sr-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #047857 0%, #059669 100%);
+  box-shadow: 0 4px 12px rgba(6, 95, 70, 0.25);
+  transform: translateY(-0.5px);
+}
+
+.sr-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Bottom Sign In Row */
+.sr-footer-row {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f3f4f6;
+  text-align: center;
+  font-size: 0.825rem;
+  color: #6b7280;
+}
+
+.sr-footer-row a {
+  color: #065f46;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sr-footer-row a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   SUCCESS SCREEN (EXECUTIVE DASHBOARD READY)
+   ========================================================================== */
+.sr-success-container {
+  max-width: 560px;
+  width: 100%;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.sr-success-badge-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #059669;
+  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.15);
+}
+
+.sr-success-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+}
+
+.sr-success-desc {
+  font-size: 0.925rem;
+  color: #4b5563;
+  line-height: 1.55;
+  margin: 0 0 2rem;
+}
+
+.sr-success-summary-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.sr-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.85rem;
+}
+
+.sr-summary-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sr-summary-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.sr-summary-value {
+  color: #111827;
+  font-weight: 600;
+}
+
+.sr-status-pill-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #b45309;
+  border-radius: 9999px;
+  font-size: 0.725rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sr-success-actions {
+  display: flex;
+  gap: 0.85rem;
+  justify-content: center;
+}
+
+.sr-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 40px;
+  padding: 0 1.25rem;
+  background: #065f46;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+
+.sr-btn-primary:hover {
+  background: #047857;
+}
+
+.sr-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 40px;
+  padding: 0 1.25rem;
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.sr-btn-secondary:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .sr-brand-panel {
+    display: none;
+  }
+  .sr-form-panel {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .sr-row {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  .sr-form-title {
+    font-size: 1.5rem;
+  }
+  .sr-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .sr-success-actions {
+    flex-direction: column;
+  }
+}

@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 
 CREATE TABLE IF NOT EXISTS `role_permissions` (
   `role_id` INT UNSIGNED NOT NULL,
+  `employee_id` INT UNSIGNED NULL,
+  `token_version` INT UNSIGNED NOT NULL DEFAULT 0,
   `permission_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`role_id`, `permission_id`),
   FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`) ON DELETE CASCADE,
@@ -36,19 +38,51 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` VARCHAR(150) NOT NULL UNIQUE,
   `password_hash` VARCHAR(255) NOT NULL,
   `role_id` INT UNSIGNED NOT NULL,
-  `status` ENUM('active', 'inactive', 'suspended') NOT NULL DEFAULT 'active',
+  `employee_id` INT UNSIGNED NULL,
+  `token_version` INT UNSIGNED NOT NULL DEFAULT 0,
+  `status` ENUM('active', 'inactive', 'suspended', 'pending', 'rejected') NOT NULL DEFAULT 'active',
   `phone` VARCHAR(30) NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`),
   INDEX `idx_users_role_id` (`role_id`),
   INDEX `idx_users_status` (`status`),
-  INDEX `idx_users_email` (`email`)
+  INDEX `idx_users_email` (`email`),
+  INDEX `idx_users_employee_id` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `staff_registration_requests` (
+  `user_id` INT UNSIGNED NOT NULL PRIMARY KEY,
+  `full_name` VARCHAR(120) NOT NULL,
+  `contact_email` VARCHAR(150) NULL,
+  `department` VARCHAR(120) NOT NULL,
+  `request_status` ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `reviewed_by_id` INT UNSIGNED NULL,
+  `reviewed_at` DATETIME NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`reviewed_by_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
+  INDEX `idx_staff_registration_status_created` (`request_status`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `user_permissions` (
+  `user_id` INT UNSIGNED NOT NULL,
+  `permission_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`user_id`, `permission_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`permission_id`) REFERENCES `permissions`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `user_permission_settings` (
+  `user_id` INT UNSIGNED NOT NULL PRIMARY KEY,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Seed Standard Roles
 INSERT INTO `roles` (`name`, `description`) VALUES
 ('admin', 'Super Administrator with unrestricted access'),
+('owner', 'Primary sawmill owner with full control'),
 ('manager', 'Yard Manager and Quality Supervisor'),
 ('operator', 'Machine and Sawing Operator'),
 ('accountant', 'Financial and Billing Officer')
@@ -82,6 +116,19 @@ INSERT INTO `permissions` (`name`, `module`, `description`) VALUES
 ('manage_enquiries', 'enquiries', 'Manage and convert customer enquiries'),
 ('view_deliveries', 'deliveries', 'View delivery records and history'),
 ('manage_deliveries', 'deliveries', 'Schedule and update deliveries')
+ ,('view_purchases', 'purchases', 'View purchase records')
+ ,('view_customers', 'customers', 'View customer details')
+ ,('view_cutting_jobs', 'production', 'View assigned cutting work')
+ ,('view_sales_orders', 'sales', 'View assigned customer orders')
+ ,('view_invoices', 'billing', 'View invoices')
+ ,('view_payments', 'billing', 'View payment records')
+ ,('manage_payments', 'billing', 'Record and manage payments')
+ ,('manage_staff', 'users', 'Review staff registration requests and manage staff access')
+ ,('manage_admins', 'users', 'Create, configure, and deactivate administrator accounts')
+ ,('manage_settings', 'settings', 'Manage business settings')
+ ,('view_stock', 'inventory', 'View current stock')
+ ,('view_images', 'inventory', 'View product and stock images')
+ ,('view_finance_reports', 'analytics', 'View financial reports')
 ON DUPLICATE KEY UPDATE `description` = VALUES(`description`);
 
 INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
@@ -91,8 +138,13 @@ JOIN permissions p ON p.name IN (
   'view_employees', 'manage_employees', 'view_employee_salary',
   'manage_employee_salary', 'view_enquiries', 'manage_enquiries',
   'view_deliveries', 'manage_deliveries'
+  ,'view_purchases', 'view_customers', 'view_cutting_jobs', 'view_sales_orders',
+  'view_invoices', 'view_payments', 'manage_payments'
 )
 WHERE r.name = 'admin';
+
+INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
+SELECT r.id, p.id FROM roles r JOIN permissions p ON p.name = 'manage_staff' WHERE r.name = 'admin';
 
 INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
 SELECT r.id, p.id FROM roles r
@@ -110,6 +162,14 @@ JOIN permissions p ON p.name IN (
   'view_enquiries', 'manage_enquiries', 'view_deliveries', 'view_reports'
 )
 WHERE r.name = 'manager';
+
+INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
+SELECT r.id, p.id FROM roles r
+JOIN permissions p ON p.name IN ('view_inventory', 'view_cutting_jobs')
+WHERE r.name = 'operator';
+
+INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
+SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'owner';
 
 -- ----------------------------------------------------------
 -- 2. CUSTOMERS / CLIENTS
@@ -605,6 +665,13 @@ CREATE TABLE IF NOT EXISTS `refresh_tokens` (
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
   INDEX `idx_rt_user` (`user_id`),
   INDEX `idx_rt_expiry` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `revoked_access_tokens` (
+  `token_hash` VARCHAR(64) NOT NULL PRIMARY KEY,
+  `expires_at` DATETIME NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_revoked_access_expiry` (`expires_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------

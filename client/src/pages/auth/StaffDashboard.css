@@ -1,0 +1,19 @@
+.staff-shell { min-height: 100vh; background: #f4f6f3; color: #1d3024; }
+.staff-header { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem clamp(1rem, 4vw, 3rem); background: #173522; color: #fff; }
+.staff-brand { color: #fff; text-decoration: none; font-weight: 750; }
+.staff-brand span { display: block; margin-top: .15rem; color: #bbd1c1; font-size: .74rem; font-weight: 400; }
+.staff-user { display: flex; align-items: center; gap: 1rem; font-size: .9rem; }
+.staff-user button { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid #ffffff60; border-radius: 7px; padding: .55rem .75rem; color: #fff; background: transparent; cursor: pointer; }
+.staff-content { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: clamp(1.5rem, 5vw, 3.5rem) 0; }
+.staff-dashboard h1 { margin: .35rem 0; color: #173522; font-size: clamp(1.8rem, 4vw, 2.5rem); }
+.staff-eyebrow { margin: 0; color: #687c6d; font-size: .74rem; font-weight: 750; letter-spacing: .12em; }
+.staff-intro { margin: .5rem 0 1.8rem; color: #607066; }
+.staff-work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.staff-work-card { display: flex; align-items: flex-start; gap: 1rem; min-height: 112px; padding: 1.25rem; color: inherit; background: #fff; border: 1px solid #e1e8e1; border-radius: 12px; text-decoration: none; box-shadow: 0 3px 12px #1c34220a; }
+.staff-work-card:hover { border-color: #85a58d; box-shadow: 0 8px 24px #1c342214; }
+.staff-work-icon { flex: 0 0 42px; width: 42px; height: 42px; display: grid; place-items: center; color: #1d5833; background: #eaf3ec; border-radius: 10px; }
+.staff-work-card strong, .staff-work-card small { display: block; }
+.staff-work-card strong { margin: .1rem 0 .4rem; color: #173522; }
+.staff-work-card small { color: #68766c; line-height: 1.45; }
+.staff-empty { padding: 1.25rem; border: 1px solid #dce7dc; border-radius: 10px; background: #fff; color: #526456; }
+@media (max-width: 620px) { .staff-work-grid { grid-template-columns: 1fr; } .staff-header { align-items: flex-start; } .staff-user { flex-direction: column; align-items: flex-end; gap: .45rem; } }

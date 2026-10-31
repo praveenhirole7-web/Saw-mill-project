@@ -30,6 +30,7 @@ Thumbs.db
 # Generated invoices / temporary files
 server/temp/
 server/invoices/
+reset_mysql_password.*
 
 
 

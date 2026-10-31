@@ -814,3 +814,41 @@ export async function addUser(user) {
   const result = await requestApi('/api/v1/auth/users', { method: 'POST', body: user });
   return result.data;
 }
+
+export async function addAdmin(user) {
+  const result = await requestApi('/api/v1/auth/admins', { method: 'POST', body: user });
+  return result.data;
+}
+
+export async function getStaffRegistrationRequests() {
+  const result = await requestApi('/api/v1/auth/staff-registration-requests');
+  return result.data?.items || [];
+}
+
+export async function decideStaffRegistration(id, decision, permissions = []) {
+  const result = await requestApi(`/api/v1/auth/staff-registration-requests/${encodeURIComponent(id)}/decision`, {
+    method: 'POST', body: { decision, permissions }
+  });
+  return result.data;
+}
+
+export async function setUserPermissions(id, permissions) {
+  const result = await requestApi(`/api/v1/auth/users/${encodeURIComponent(id)}/permissions`, {
+    method: 'PUT', body: JSON.stringify({ permissions })
+  });
+  return result.data;
+}
+
+export async function setUserStatus(id, status) {
+  const result = await requestApi(`/api/v1/auth/users/${encodeURIComponent(id)}/status`, {
+    method: 'PATCH', body: JSON.stringify({ status })
+  });
+  return result.data;
+}
+
+export async function resetStaffPassword(id, password) {
+  const result = await requestApi(`/api/v1/auth/users/${encodeURIComponent(id)}/password-reset`, {
+    method: 'POST', body: JSON.stringify({ password })
+  });
+  return result.data;
+}

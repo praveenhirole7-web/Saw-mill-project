@@ -30,7 +30,8 @@ function role(requiredRole) {
     if (!req.user) {
       return next(new AppError('Unauthenticated.', 401, 'NO_TOKEN'));
     }
-    if (req.user.role !== requiredRole) {
+    const roleMatches = req.user.role === requiredRole || (requiredRole === 'admin' && req.user.role === 'owner');
+    if (!roleMatches) {
       return next(
         new AppError(
           `Access denied. This action requires the '${requiredRole}' role.`,
@@ -38,6 +39,12 @@ function role(requiredRole) {
           'INSUFFICIENT_ROLE'
         )
       );
+    }
+    if (requiredRole === 'admin' && req.user.role !== 'owner' && req.user.permissionOverride) {
+      const permission = routePermission(req);
+      if (permission && !hasPermission(req.user, permission)) {
+        return next(new AppError(`Access denied. Missing permission: '${permission}'.`, 403, 'INSUFFICIENT_PERMISSION'));
+      }
     }
     next();
   };
@@ -52,7 +59,8 @@ function roles(allowedRoles) {
     if (!req.user) {
       return next(new AppError('Unauthenticated.', 401, 'NO_TOKEN'));
     }
-    if (!allowedRoles.includes(req.user.role)) {
+    const roleMatches = allowedRoles.includes(req.user.role) || (allowedRoles.includes('admin') && req.user.role === 'owner');
+    if (!roleMatches) {
       return next(
         new AppError(
           `Access denied. Required role: one of [${allowedRoles.join(', ')}].`,
@@ -61,8 +69,34 @@ function roles(allowedRoles) {
         )
       );
     }
+    if (req.user.permissionOverride && req.user.role !== 'owner') {
+      const permission = routePermission(req);
+      if (permission && !hasPermission(req.user, permission)) {
+        return next(new AppError(`Access denied. Missing permission: '${permission}'.`, 403, 'INSUFFICIENT_PERMISSION'));
+      }
+    }
     next();
   };
+}
+
+function routePermission(req) {
+  const base = (req.baseUrl || '').replace(/^\/api\/v1\//, '');
+  const method = req.method.toUpperCase();
+  const read = method === 'GET' || method === 'HEAD';
+  const map = {
+    inventory: read ? 'view_inventory' : 'manage_inventory',
+    purchases: read ? 'view_purchases' : 'manage_purchases',
+    customers: read ? 'view_customers' : 'manage_customers',
+    'cutting-jobs': read ? 'view_cutting_jobs' : 'manage_cutting_jobs',
+    'sales-orders': read ? 'view_sales_orders' : 'manage_sales_orders',
+    suppliers: read ? 'view_purchases' : 'manage_purchases',
+    invoices: req.path.includes('/payments')
+      ? (read ? 'view_payments' : 'manage_payments')
+      : (read ? 'view_invoices' : 'manage_invoices'),
+    'wood-types': 'manage_inventory',
+    settings: 'manage_settings',
+  };
+  return map[base] || null;
 }
 
 /**
@@ -74,7 +108,7 @@ function permission(requiredPermission) {
     if (!req.user) {
       return next(new AppError('Unauthenticated.', 401, 'NO_TOKEN'));
     }
-    if (!req.user.permissions.includes(requiredPermission)) {
+    if (!hasPermission(req.user, requiredPermission)) {
       return next(
         new AppError(
           `Access denied. Missing permission: '${requiredPermission}'.`,
@@ -85,6 +119,11 @@ function permission(requiredPermission) {
     }
     next();
   };
+}
+
+function hasPermission(user, requiredPermission) {
+  return user.permissions.includes(requiredPermission) ||
+    (requiredPermission.startsWith('view_') && user.permissions.includes(requiredPermission.replace(/^view_/, 'manage_')));
 }
 
 /**

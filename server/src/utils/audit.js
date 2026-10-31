@@ -38,6 +38,10 @@ const audit = {
   userCreated:  (actorId, newId) => log({ userId: actorId, action: 'USER_CREATED', tableName: 'users', recordId: newId, description: 'New user account created' }),
   userStatusChange: (actorId, targetId, status) =>
     log({ userId: actorId, action: 'USER_STATUS_CHANGED', tableName: 'users', recordId: targetId, description: `Status set to: ${status}` }),
+  userPermissionsChanged: (actorId, targetId, permissions) =>
+    log({ userId: actorId, action: 'USER_PERMISSIONS_CHANGED', tableName: 'users', recordId: targetId, description: `Staff permissions set: ${permissions.join(', ') || 'none'}` }),
+  userPasswordReset: (actorId, targetId) =>
+    log({ userId: actorId, action: 'STAFF_PASSWORD_RESET', tableName: 'users', recordId: targetId, description: 'Staff password reset; existing sessions revoked' }),
 };
 
 module.exports = audit;

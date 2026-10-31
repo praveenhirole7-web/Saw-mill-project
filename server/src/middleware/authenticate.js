@@ -23,6 +23,7 @@
  *              - 403 ACCOUNT_INACTIVE
  */
 const AppError = require('../utils/AppError');
+const crypto = require('node:crypto');
 const { query } = require('../config/db');
 const { verifyAccessToken } = require('../utils/tokens');
 
@@ -53,11 +54,23 @@ module.exports = async function authenticate(req, res, next) {
       throw new AppError('Invalid authentication token.', 401, 'INVALID_TOKEN');
     }
 
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const [revoked] = await query(
+      'SELECT token_hash FROM revoked_access_tokens WHERE token_hash = ? AND expires_at > NOW()',
+      [tokenHash]
+    );
+    if (revoked.length) throw new AppError('This session has been signed out. Please log in again.', 401, 'TOKEN_REVOKED');
+
     // ── 3. Load fresh user row (catches deactivated accounts between tokens) ──
     const [rows] = await query(
-      `SELECT u.id, u.username, u.email, u.status,
+      `SELECT u.id, u.username, u.email, u.employee_id, u.token_version, u.status,
+              EXISTS (SELECT 1 FROM user_permission_settings ups WHERE ups.user_id = u.id) AS permission_override,
               r.name AS role,
-              GROUP_CONCAT(p.name ORDER BY p.name SEPARATOR ',') AS permissions
+              CASE WHEN EXISTS (SELECT 1 FROM user_permission_settings ups WHERE ups.user_id = u.id)
+                   THEN (SELECT GROUP_CONCAT(p2.name ORDER BY p2.name SEPARATOR ',')
+                         FROM user_permissions up JOIN permissions p2 ON p2.id = up.permission_id
+                         WHERE up.user_id = u.id)
+                   ELSE GROUP_CONCAT(p.name ORDER BY p.name SEPARATOR ',') END AS permissions
        FROM   users u
        JOIN   roles r ON r.id = u.role_id
        LEFT JOIN role_permissions rp ON rp.role_id = r.id
@@ -73,6 +86,10 @@ module.exports = async function authenticate(req, res, next) {
 
     const user = rows[0];
 
+    if (Number(payload.ver || 0) !== Number(user.token_version || 0)) {
+      throw new AppError('Your account session has been reset. Please log in again.', 401, 'TOKEN_REVOKED');
+    }
+
     if (user.status !== 'active') {
       throw new AppError(
         'Your account has been deactivated. Please contact an administrator.',
@@ -87,8 +104,10 @@ module.exports = async function authenticate(req, res, next) {
       username:    user.username,
       name:        user.username,
       email:       user.email,
+      employeeId:  user.employee_id || null,
       role:        user.role,
       permissions: user.permissions ? user.permissions.split(',').filter(Boolean) : [],
+      permissionOverride: Boolean(user.permission_override),
     };
 
     next();

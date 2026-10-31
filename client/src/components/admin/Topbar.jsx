@@ -47,6 +47,7 @@ export default function Topbar({ onOpenMobileSidebar }) {
     try {
       await logout();
       setIsUserMenuOpen(false);
+      navigate('/login', { replace: true });
     } catch (error) {
       setLogoutError(error.message || 'Could not log out. Please try again.');
     }

@@ -1,6 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, CheckCircle2, Ruler, Tag, Star, CircleHelp } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  CheckCircle2,
+  CircleHelp,
+  ClipboardList,
+  Mic,
+  PackageCheck,
+  PhoneCall,
+  ReceiptText,
+  Ruler,
+  ShoppingBag,
+  Star,
+  Tag,
+  Volume2,
+  Wallet,
+  Warehouse,
+} from 'lucide-react';
 import Button from '../components/common/Button';
 import SeoMeta from '../components/common/SeoMeta';
 import { getPublicProducts } from '../services/publicEnquiry';
@@ -36,15 +53,102 @@ const faqs = [
   }
 ];
 
+function VoiceButton({ onTranscript, title, className = '' }) {
+  const recognitionRef = useRef(null);
+  const [listening, setListening] = useState(false);
+
+  const stopListening = useCallback(() => {
+    recognitionRef.current?.stop();
+    setListening(false);
+  }, []);
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      return undefined;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-IN';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.trim();
+      if (transcript) {
+        onTranscript(transcript);
+      }
+    };
+    recognition.onend = () => setListening(false);
+    recognition.onerror = () => setListening(false);
+    recognitionRef.current = recognition;
+
+    return () => {
+      recognition.stop();
+      recognitionRef.current = null;
+    };
+  }, [onTranscript]);
+
+  const handleClick = () => {
+    if (!recognitionRef.current) {
+      return;
+    }
+
+    if (listening) {
+      stopListening();
+      return;
+    }
+
+    setListening(true);
+    recognitionRef.current.start();
+  };
+
+  return (
+    <button type="button" className={`voice-btn ${className}`.trim()} onClick={handleClick} title={title} aria-label={title}>
+      <Mic size={16} aria-hidden="true" />
+      {listening ? 'Listening...' : 'Voice'}
+    </button>
+  );
+}
+
+function ReadAloudButton({ text, className = '' }) {
+  const [speaking, setSpeaking] = useState(false);
+
+  const handleSpeak = () => {
+    if (!('speechSynthesis' in window)) {
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-IN';
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  };
+
+  return (
+    <button type="button" className={`voice-btn ${className}`.trim()} onClick={handleSpeak} aria-label="Read information aloud">
+      <Volume2 size={16} aria-hidden="true" />
+      {speaking ? 'Playing...' : 'Listen'}
+    </button>
+  );
+}
+
 export default function Home() {
   const { t, language } = useLanguage();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const loadProducts = useCallback(() => {
     getPublicProducts()
-      .then((items) => { setProducts(items.slice(0, 6)); setError(''); })
+      .then((items) => {
+        setProducts(items.slice(0, 6));
+        setError('');
+      })
       .catch(() => setError('The wood list is not available right now. Please try again later.'))
       .finally(() => setLoading(false));
   }, []);
@@ -53,49 +157,102 @@ export default function Home() {
     loadProducts();
   }, [loadProducts]);
 
+  const visibleProducts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return products;
+
+    return products.filter((product) => {
+      const woodName = getLocalizedWoodName(product, t, language).toLowerCase();
+      const englishName = (product.name || '').toLowerCase();
+      const categoryName = (product.category || '').toLowerCase();
+      return woodName.includes(query) || englishName.includes(query) || categoryName.includes(query);
+    });
+  }, [language, products, searchQuery, t]);
+
+  const quickActions = [
+    { key: 'sellWood', path: '/quote', icon: PackageCheck },
+    { key: 'buyWood', path: '/products', icon: ShoppingBag },
+    { key: 'checkStock', path: '/products', icon: Warehouse },
+    { key: 'myOrders', path: '/contact', icon: ClipboardList },
+    { key: 'myBills', path: '/contact', icon: ReceiptText },
+    { key: 'myPayments', path: '/contact', icon: Wallet },
+    { key: 'contactUs', path: '/contact', icon: PhoneCall },
+  ];
+
   return (
-    <div className="homepage-wrapper">
+    <div className="homepage-wrapper farmer-home">
       <SeoMeta
-        title="TimberCraft Saw Mill"
-        description="TimberCraft Saw Mill supplies wood, custom cutting, and sawing services for homeowners, builders, and trade clients."
+        title={t('home.metaTitle')}
+        description={t('home.metaDescription')}
         path="/"
       />
-      <section className="hero-section" aria-labelledby="home-hero-title">
-        <div
-          className="hero-section__bg"
-          style={{ backgroundImage: "url('/images/hero-banner.jpg')" }}
-          aria-hidden="true"
-        />
+      <section className="hero-section farmer-hero" aria-labelledby="home-hero-title">
+        <div className="hero-section__bg" style={{ backgroundImage: "url('/images/hero-banner.jpg')" }} aria-hidden="true" />
         <div className="hero-section__overlay" aria-hidden="true" />
         <div className="container hero-section__container">
-          <div className="hero-section__content">
+          <div className="hero-section__content farmer-hero__content">
             <span className="hero-section__tag">
               <CheckCircle2 size={16} aria-hidden="true" />
-              Wood available now and custom cutting work
+              {t('home.badge')}
             </span>
             <h1 id="home-hero-title" className="hero-section__heading">
-              Wood for your work, cut to size.
+              {t('home.simpleTitle')}
             </h1>
             <p className="hero-section__lead">
-              Browse wood available now, or tell us the type, size and cutting work you need.
+              {t('home.simpleLead')}
             </p>
-            <div className="hero-section__cta-group">
-              <Link to="/products">
-                <Button variant="white" size="md" icon={<ArrowRight size={17} />}>
-                  See Wood for Sale
-                </Button>
-              </Link>
+
+            <div className="farmer-search" aria-label={t('home.searchLabel')}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder={t('home.searchPlaceholder')}
+                aria-label={t('home.searchPlaceholder')}
+              />
+              <button type="button" className="farmer-search__btn" onClick={() => setSearchQuery(searchQuery.trim())}>
+                {t('home.searchButton')}
+              </button>
+              <VoiceButton onTranscript={setSearchQuery} title={t('home.voiceSearch')} />
+              <ReadAloudButton text={`${t('home.simpleTitle')} ${t('home.simpleLead')}`} />
+            </div>
+
+            <div className="hero-section__cta-group farmer-cta-group">
               <Link to="/quote">
+                <Button variant="white" size="md" icon={<ArrowRight size={17} />}>
+                  {t('home.sellWood')}
+                </Button>
+              </Link>
+              <Link to="/products">
                 <Button variant="ghost" size="md">
-                  Ask for a Price
+                  {t('home.buyWood')}
                 </Button>
               </Link>
             </div>
+
             <div className="hero-section__proof" aria-label="Mill services">
-              <span>Finished wood</span>
-              <span>Wood cut to size</span>
-              <span>Help from our mill team</span>
+              <span>{t('home.heroProof1')}</span>
+              <span>{t('home.heroProof2')}</span>
+              <span>{t('home.heroProof3')}</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section farmer-quick-actions-section">
+        <div className="container">
+          <div className="section-header text-center">
+            <h2 className="section-title">{t('home.quickActionsTitle')}</h2>
+            <p className="section-subtitle">{t('home.quickActionsSubtitle')}</p>
+          </div>
+
+          <div className="farmer-quick-actions">
+            {quickActions.map(({ key, path, icon: Icon }) => (
+              <Link key={key} to={path} className="farmer-quick-action" aria-label={t(`home.${key}`)}>
+                <span className="farmer-quick-action__icon"><Icon size={22} aria-hidden="true" /></span>
+                <span className="farmer-quick-action__label">{t(`home.${key}`)}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -103,24 +260,26 @@ export default function Home() {
       <section className="section">
         <div className="container">
           <div className="section-header text-center">
-            <h2 className="section-title">Wood Available Now</h2>
-            <p className="section-subtitle">This list shows wood currently available from our mill. It may change as stock is sold or added.</p>
+            <h2 className="section-title">{t('home.woodNow')}</h2>
+            <p className="section-subtitle">{t('home.woodNowSubtitle')}</p>
           </div>
 
           {error && (
             <div className="products-empty-state" role="alert">
-              <h3>Wood list could not be loaded</h3>
+              <h3>{t('home.loadErrorTitle')}</h3>
               <p>{error}</p>
-              <Button variant="outline" size="md" onClick={() => { setLoading(true); loadProducts(); }}>Try Again</Button>
+              <Button variant="outline" size="md" onClick={() => { setLoading(true); loadProducts(); }}>
+                {t('home.tryAgain')}
+              </Button>
             </div>
           )}
-          {loading ? <p role="status">Loading wood list...</p> : null}
-          {!loading && !error && products.length === 0 ? (
-            <div className="products-empty-state"><p>No finished wood is available right now.</p></div>
+          {loading ? <p role="status">{t('home.loading')}</p> : null}
+          {!loading && !error && visibleProducts.length === 0 ? (
+            <div className="products-empty-state"><p>{t('home.noStock')}</p></div>
           ) : null}
-          {!loading && !error && products.length > 0 && (
+          {!loading && !error && visibleProducts.length > 0 && (
             <div className="home-catalog-grid">
-              {products.map((product) => (
+              {visibleProducts.map((product) => (
                 <article className="product-listing-card" key={product.id}>
                   <div className="product-listing-card__media">
                     <img
@@ -185,6 +344,7 @@ export default function Home() {
           )}
         </div>
       </section>
+
       <section className="section testimonials-section">
         <div className="container">
           <div className="section-header text-center">

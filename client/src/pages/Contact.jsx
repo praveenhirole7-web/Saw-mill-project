@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Send, CheckCircle2 } from 'lucide-react';
 import PageHeader from '../components/common/PageHeader';
 import FormInput from '../components/common/FormInput';
 import FormTextarea from '../components/common/FormTextarea';
 import Alert from '../components/common/Alert';
 import Button from '../components/common/Button';
+import SeoMeta from '../components/common/SeoMeta';
 import { submitPublicEnquiry } from '../services/publicEnquiry';
 import './Contact.css';
 
 export default function Contact() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', product: '', message: '', website: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -22,8 +25,26 @@ export default function Contact() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
-    if (!formData.phone.trim() && !formData.email.trim()) {
+
+    const trimmedPhone = formData.phone.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+    const trimmedProduct = formData.product.trim();
+
+    if (!trimmedPhone && !trimmedEmail) {
       setError('Enter a phone number or email so we can reply.');
+      return;
+    }
+    if (!trimmedProduct) {
+      setError('Please tell us what you need help with.');
+      return;
+    }
+    if (!trimmedMessage) {
+      setError('Please add a short message before sending.');
+      return;
+    }
+    if (formData.website.trim()) {
+      setError('Your submission could not be processed.');
       return;
     }
 
@@ -31,16 +52,17 @@ export default function Contact() {
     try {
       const saved = await submitPublicEnquiry({
         source: 'contact',
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        requested_product: formData.product,
+        name: formData.name.trim(),
+        phone: trimmedPhone,
+        email: trimmedEmail,
+        requested_product: trimmedProduct,
         quantity: '1',
         quantity_unit: 'enquiry',
-        message: formData.message,
-        website: formData.website
+        message: trimmedMessage,
+        website: ''
       });
       setReference(saved.reference);
+      navigate('/thank-you', { replace: true });
     } catch (submitError) {
       setError(submitError.message || 'We could not save your message. Please try again.');
     } finally {
@@ -50,6 +72,11 @@ export default function Contact() {
 
   return (
     <div className="contact-page">
+      <SeoMeta
+        title="Contact TimberCraft Saw Mill"
+        description="Contact the TimberCraft Saw Mill team for timber supply, custom cutting, and price enquiries."
+        path="/contact"
+      />
       <PageHeader
         eyebrow="Contact"
         title="Send a Message"
@@ -67,7 +94,7 @@ export default function Contact() {
                 <p>Your message was saved. Keep this number: <strong>{reference}</strong></p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} noValidate>
                 <p className="form-helper">Enter a phone number or email so we can reply. Fields with * are required.</p>
                 <div className="form-row-2">
                   <FormInput id="contact-name" name="name" label="Name" value={formData.name} onChange={handleChange} required maxLength={120} />

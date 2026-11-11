@@ -3,11 +3,17 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import PageHeader from '../components/common/PageHeader';
 import Button from '../components/common/Button';
+import SeoMeta from '../components/common/SeoMeta';
 import './About.css';
 
 export default function About() {
   return (
     <div className="about-page">
+      <SeoMeta
+        title="About TimberCraft Saw Mill"
+        description="Learn about TimberCraft Saw Mill, our timber supply services, and the custom milling expertise we bring to builders and trade clients."
+        path="/about"
+      />
       <PageHeader
         eyebrow="About"
         title="About Our Saw Mill"

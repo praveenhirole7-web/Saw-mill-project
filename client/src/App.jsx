@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Outlet }
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import QuoteModal from './components/quote/QuoteModal';
+import GoogleAnalytics from './components/common/GoogleAnalytics';
+import NotFoundPage from './pages/NotFoundPage';
+import ThankYouPage from './pages/ThankYouPage';
 
 // Auth & Providers
 import { AuthProvider } from './context/AuthContext';
@@ -94,6 +97,7 @@ function App() {
     <AuthProvider>
         <Router>
           <ScrollToTop />
+          <GoogleAnalytics />
           <TranslationCoverageNotice />
           <Suspense fallback={<div className="app-route-loading" role="status"><LoadingSpinner message="Loading page…" /></div>}>
           <Routes>
@@ -155,7 +159,9 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="/thank-you" element={<ThankYouPage />} />
+              <Route path="/404" element={<NotFoundPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
           </Suspense>

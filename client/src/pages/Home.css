@@ -437,6 +437,7 @@
   display: flex;
   gap: 0.25rem;
   margin-bottom: 1.25rem;
+  color: var(--color-amber);
 }
 
 .testimonial-card__quote {
@@ -486,6 +487,48 @@
   display: block;
   font-size: 0.78rem;
   color: var(--color-text-muted);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.75rem;
+}
+
+.faq-section {
+  background-color: #ffffff;
+}
+
+.faq-list {
+  display: grid;
+  gap: 1rem;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-cream-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.5rem 1.2rem;
+}
+
+.faq-question-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-forest-dark);
+}
+
+.faq-question-row h3 {
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.faq-item p {
+  margin-left: 2rem;
+  color: var(--color-text-secondary);
 }
 
 .testimonial-card__footer {

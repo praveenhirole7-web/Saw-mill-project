@@ -7,6 +7,7 @@ import { getPublicProducts } from '../services/publicEnquiry';
 import { formatCurrency } from '../utils/formatters';
 import { useLanguage } from '../context/LanguageContext';
 import { getLocalizedWoodName, isWoodNameVerified } from '../i18n/woodSpecies';
+import SeoMeta from '../components/common/SeoMeta';
 import './Products.css';
 
 export default function Products() {
@@ -88,6 +89,11 @@ export default function Products() {
 
   return (
     <div className="products-page">
+      <SeoMeta
+        title="Wood for sale"
+        description="Browse TimberCraft Saw Mill wood inventory, dimensions, and premium timber stock available for purchase and custom milling."
+        path="/products"
+      />
       <PageHeader 
         eyebrow="Wood for Sale"
         title="Available Wood"
@@ -177,7 +183,7 @@ export default function Products() {
                   <div className="product-listing-card__media">
                     <img
                       src={product.image || '/images/timber-boards.jpg'}
-                      alt={`${product.name} timber`}
+                      alt={`${product.name} timber available from TimberCraft Saw Mill`}
                       className="product-listing-card__img"
                       loading="lazy"
                     />

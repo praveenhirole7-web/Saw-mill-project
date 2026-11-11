@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Send, CheckCircle2 } from 'lucide-react';
 import PageHeader from '../components/common/PageHeader';
 import FormInput from '../components/common/FormInput';
 import FormTextarea from '../components/common/FormTextarea';
 import Alert from '../components/common/Alert';
 import Button from '../components/common/Button';
+import SeoMeta from '../components/common/SeoMeta';
 import { submitPublicEnquiry } from '../services/publicEnquiry';
 import './Quote.css';
 
 export default function Quote() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState(() => ({
     name: '',
@@ -35,28 +37,54 @@ export default function Quote() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
-    if (!formData.phone.trim() && !formData.email.trim()) {
+
+    const trimmedPhone = formData.phone.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedProduct = formData.product.trim();
+    const trimmedQuantity = formData.quantity.trim();
+    const trimmedUnit = formData.unit.trim();
+    const trimmedMessage = formData.message.trim();
+
+    if (!trimmedPhone && !trimmedEmail) {
       setError('Enter a phone number or email so we can reply.');
       return;
     }
+    if (!trimmedProduct) {
+      setError('Please tell us which wood or product you need.');
+      return;
+    }
+    if (!trimmedQuantity || !trimmedUnit) {
+      setError('Please add the quantity and unit for your request.');
+      return;
+    }
+    if (!trimmedMessage) {
+      setError('Please include a short message describing the work needed.');
+      return;
+    }
+    if (formData.website.trim()) {
+      setError('Your submission could not be processed.');
+      return;
+    }
+
     setSubmitting(true);
     try {
       const saved = await submitPublicEnquiry({
         source: 'quote',
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        requested_product: formData.product,
-        quantity: formData.quantity,
-        quantity_unit: formData.unit,
-        dimensions: formData.dimensions,
-        service_required: formData.service,
-        message: [formData.service && `Requested service: ${formData.service}`, formData.dimensions && `Dimensions: ${formData.dimensions}`, formData.message]
+        name: formData.name.trim(),
+        phone: trimmedPhone,
+        email: trimmedEmail,
+        requested_product: trimmedProduct,
+        quantity: trimmedQuantity,
+        quantity_unit: trimmedUnit,
+        dimensions: formData.dimensions.trim(),
+        service_required: formData.service.trim(),
+        message: [formData.service && `Requested service: ${formData.service.trim()}`, formData.dimensions && `Dimensions: ${formData.dimensions.trim()}`, trimmedMessage]
           .filter(Boolean)
           .join('\n'),
-        website: formData.website
+        website: ''
       });
       setReference(saved.reference);
+      navigate('/thank-you', { replace: true });
     } catch (submitError) {
       setError(submitError.message || 'We could not save your request. Please try again.');
     } finally {
@@ -66,6 +94,11 @@ export default function Quote() {
 
   return (
     <div className="quote-page">
+      <SeoMeta
+        title="Request a timber quote"
+        description="Request a timber quote, custom cutting price, or mill service from TimberCraft Saw Mill."
+        path="/quote"
+      />
       <PageHeader
         eyebrow="Ask for a Price"
         title="Tell Us What You Need"
@@ -83,7 +116,7 @@ export default function Quote() {
                 <p>Your request was saved. Keep this number: <strong>{reference}</strong></p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} noValidate>
                 <p className="form-helper">Fields with * are required. Enter a phone number or email so we can reply.</p>
                 <div className="form-row-2">
                   <FormInput id="quote-name" name="name" label="Name" value={formData.name} onChange={handleChange} required maxLength={120} />

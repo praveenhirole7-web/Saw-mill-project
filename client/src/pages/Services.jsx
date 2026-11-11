@@ -3,11 +3,17 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import PageHeader from '../components/common/PageHeader';
 import Button from '../components/common/Button';
+import SeoMeta from '../components/common/SeoMeta';
 import './Services.css';
 
 export default function Services() {
   return (
     <div className="services-page">
+      <SeoMeta
+        title="Saw mill services"
+        description="Explore TimberCraft Saw Mill services for wood supply, custom cutting, and milling support for commercial and residential projects."
+        path="/services"
+      />
       <PageHeader
         eyebrow="Mill Services"
         title="Wood Cutting and Supply"

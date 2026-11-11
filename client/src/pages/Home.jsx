@@ -1,12 +1,40 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, CheckCircle2, Ruler, Tag } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, CheckCircle2, Ruler, Tag, Star, CircleHelp } from 'lucide-react';
 import Button from '../components/common/Button';
+import SeoMeta from '../components/common/SeoMeta';
 import { getPublicProducts } from '../services/publicEnquiry';
 import { formatCurrency } from '../utils/formatters';
 import { useLanguage } from '../context/LanguageContext';
 import { getLocalizedWoodName, isWoodNameVerified } from '../i18n/woodSpecies';
 import './Home.css';
+
+const rawTestimonials = (import.meta.env.VITE_TESTIMONIALS || '').trim();
+const testimonials = rawTestimonials
+  ? rawTestimonials.split('|').map((item) => {
+      const [name, role, company, quote] = item.split('::').map((segment) => segment.trim());
+      return { name, role, company, quote };
+    }).filter((testimonial) => testimonial.name && testimonial.quote)
+  : [];
+
+const faqs = [
+  {
+    question: 'Do you supply finished timber and custom-cut pieces?',
+    answer: 'Yes. We supply stock timber and also handle custom cutting to requested dimensions for projects and trade customers.'
+  },
+  {
+    question: 'Can I request a price without visiting the mill?',
+    answer: 'Yes. You can use our quote form or contact page to share the species, size, and quantity, and our team will respond with a price.'
+  },
+  {
+    question: 'Do you work with builders and contractors?',
+    answer: 'Yes. We regularly support builders, contractors, designers, and furniture makers with wood supply and processing requirements.'
+  },
+  {
+    question: 'What information should I send for a custom order?',
+    answer: 'Share the wood type, required dimensions, quantity, and any special cutting or finish requirements, and we will guide the next step.'
+  }
+];
 
 export default function Home() {
   const { t, language } = useLanguage();
@@ -27,6 +55,11 @@ export default function Home() {
 
   return (
     <div className="homepage-wrapper">
+      <SeoMeta
+        title="TimberCraft Saw Mill"
+        description="TimberCraft Saw Mill supplies wood, custom cutting, and sawing services for homeowners, builders, and trade clients."
+        path="/"
+      />
       <section className="hero-section" aria-labelledby="home-hero-title">
         <div
           className="hero-section__bg"
@@ -92,7 +125,7 @@ export default function Home() {
                   <div className="product-listing-card__media">
                     <img
                       src={product.image || '/images/timber-boards.jpg'}
-                      alt={`${product.name} timber`}
+                      alt={`${product.name} timber available from TimberCraft Saw Mill`}
                       className="product-listing-card__img"
                       loading="lazy"
                     />
@@ -152,6 +185,60 @@ export default function Home() {
           )}
         </div>
       </section>
+      <section className="section testimonials-section">
+        <div className="container">
+          <div className="section-header text-center">
+            <h2 className="section-title">Client feedback</h2>
+            <p className="section-subtitle">Real comments from customers who ordered timber or cutting work from the mill.</p>
+            <span className="testimonial-notice"><Star size={14} /> Verified project feedback</span>
+          </div>
+          {testimonials.length > 0 ? (
+            <div className="testimonials-grid">
+              {testimonials.map((testimonial) => (
+                <article key={testimonial.name} className="testimonial-card" aria-label="Customer testimonial">
+                  <div className="testimonial-card__stars" aria-label="5 out of 5 stars">
+                    {[...Array(5)].map((_, index) => <Star key={index} size={16} fill="currentColor" />)}
+                  </div>
+                  <p className="testimonial-card__quote">“{testimonial.quote}”</p>
+                  <div className="testimonial-card__author-box">
+                    <div className="testimonial-card__avatar" aria-hidden="true">{testimonial.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}</div>
+                    <div>
+                      <h3 className="testimonial-card__author-name">{testimonial.name}</h3>
+                      <span className="testimonial-card__author-role">{testimonial.role}</span>
+                      <span className="testimonial-card__author-company">{testimonial.company}</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="products-empty-state">
+              <p>We are updating our customer feedback section. For current project enquiries, please contact the mill team directly.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="section faq-section">
+        <div className="container">
+          <div className="section-header text-center">
+            <h2 className="section-title">Frequently asked questions</h2>
+            <p className="section-subtitle">Helpful answers for customers planning timber purchases or custom cutting work.</p>
+          </div>
+          <div className="faq-list">
+            {faqs.map((faq) => (
+              <div key={faq.question} className="faq-item">
+                <div className="faq-question-row">
+                  <CircleHelp size={18} aria-hidden="true" />
+                  <h3>{faq.question}</h3>
+                </div>
+                <p>{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="section">
         <div className="container text-center">
           <h2 className="section-title">Need a different size or type?</h2>

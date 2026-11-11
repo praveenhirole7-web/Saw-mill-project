@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, CheckCircle2 } from 'lucide-react';
+import { Send, CheckCircle2, Phone, Mail, MessageSquareText } from 'lucide-react';
 import PageHeader from '../components/common/PageHeader';
 import FormInput from '../components/common/FormInput';
 import FormTextarea from '../components/common/FormTextarea';
@@ -79,13 +79,28 @@ export default function Contact() {
       />
       <PageHeader
         eyebrow="Contact"
-        title="Send a Message"
-        subtitle="Send us your details and message. We will tell you when we receive it."
+        title="Need help? Contact us"
+        subtitle="Tell us what you need. We will reply quickly and help you with the next step."
         breadcrumbs={[{ label: 'Contact Us' }]}
       />
       <section className="contact-main-section">
         <div className="container">
           <div className="contact-form-card">
+            <div className="contact-quick-help">
+              <div className="contact-quick-help__item">
+                <Phone size={18} />
+                <span>Call or message us</span>
+              </div>
+              <div className="contact-quick-help__item">
+                <Mail size={18} />
+                <span>Send your details</span>
+              </div>
+              <div className="contact-quick-help__item">
+                <MessageSquareText size={18} />
+                <span>Get a quick reply</span>
+              </div>
+            </div>
+
             {error && <Alert type="error" title="Message not submitted" message={error} />}
             {reference ? (
               <div role="status">
@@ -95,10 +110,10 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate>
-                <p className="form-helper">Enter a phone number or email so we can reply. Fields with * are required.</p>
+                <p className="form-helper">Enter your phone number or email so we can contact you. All required fields are marked.</p>
                 <div className="form-row-2">
-                  <FormInput id="contact-name" name="name" label="Name" value={formData.name} onChange={handleChange} required maxLength={120} />
-                  <FormInput id="contact-phone" name="phone" label="Phone" type="tel" value={formData.phone} onChange={handleChange} maxLength={30} />
+                  <FormInput id="contact-name" name="name" label="Your name" value={formData.name} onChange={handleChange} required maxLength={120} />
+                  <FormInput id="contact-phone" name="phone" label="Phone number" type="tel" value={formData.phone} onChange={handleChange} maxLength={30} />
                 </div>
                 <FormInput id="contact-email" name="email" label="Email" type="email" value={formData.email} onChange={handleChange} maxLength={150} />
                 <FormInput id="contact-product" name="product" label="What do you need help with?" value={formData.product} onChange={handleChange} required maxLength={150} />
@@ -108,7 +123,7 @@ export default function Contact() {
                   <input id="contact-website" name="website" value={formData.website} onChange={handleChange} tabIndex="-1" autoComplete="off" />
                 </div>
                 <Button type="submit" variant="primary" size="lg" disabled={submitting} icon={<Send size={18} />} fullWidth>
-                  {submitting ? 'Sending...' : 'Send Message'}
+                  {submitting ? 'Sending...' : 'Send message'}
                 </Button>
               </form>
             )}

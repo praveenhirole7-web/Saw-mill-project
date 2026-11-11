@@ -304,3 +304,29 @@
     grid-template-columns: 1fr;
   }
 }
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.service-card {
+  min-height: 220px;
+}
+
+.service-card h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.35rem;
+}
+
+.service-card p {
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+}

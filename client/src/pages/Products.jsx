@@ -96,10 +96,10 @@ export default function Products() {
       />
       <PageHeader 
         eyebrow="Wood for Sale"
-        title="Available Wood"
-        subtitle="See the finished wood currently available from our mill."
+        title="Wood available now"
+        subtitle="Choose the wood you need. Use the search box and simple filters to find the right option quickly."
         breadcrumbs={[{ label: 'Products' }]}
-        badge="Available from Our Mill"
+        badge="Ready to buy"
       />
 
       <section className="products-catalog-section">
@@ -113,7 +113,7 @@ export default function Products() {
               <Search size={18} className="products-search-icon" />
               <input
                 type="text"
-                placeholder="Search by wood type, name or size..."
+                placeholder="Search wood, size, or type"
                 value={searchQuery}
                 onChange={(e) => {
                   setServerSearchResults(null);
@@ -163,7 +163,7 @@ export default function Products() {
           {/* Results Summary */}
           <div className="products-results-bar">
           <span role={loading ? 'status' : undefined}>
-            {loading ? 'Loading wood list...' : `Showing ${filteredProducts.length} item${filteredProducts.length !== 1 ? 's' : ''}`}
+            {loading ? 'Loading wood list...' : `Showing ${filteredProducts.length} option${filteredProducts.length !== 1 ? 's' : ''}`}
           </span>
             {selectedCategory !== 'All' && (
               <span className="products-active-filter">
@@ -249,8 +249,8 @@ export default function Products() {
             </div>
           ) : !loading && !error ? (
             <div className="products-empty-state">
-              <h3>No Wood Products Match Your Criteria</h3>
-              <p>No matching finished timber is currently available. Try another search or check back later.</p>
+              <h3>No wood found</h3>
+              <p>Try another search or check again later. We may have more wood available soon.</p>
               <Button 
                 variant="outline" 
                 size="md" 
@@ -259,7 +259,7 @@ export default function Products() {
                   handleCategoryChange('All');
                 }}
               >
-                Reset Search Filters
+                Clear filters
               </Button>
             </div>
           ) : null}
@@ -267,12 +267,12 @@ export default function Products() {
           {/* Custom Milling Assistance Callout */}
           <div className="products-custom-callout">
             <div>
-              <h3>Require Custom Species or Non-Standard Thickness?</h3>
-              <p>Tell us what type of wood, size and amount you need. We will contact you with a price.</p>
+              <h3>Need a special size or wood type?</h3>
+              <p>Tell us the wood type, size, and quantity you need. We will help with the next step.</p>
             </div>
             <Link to="/quote">
               <Button variant="primary" size="md">
-                Submit Dimensional Blueprints
+                Ask for a custom price
               </Button>
             </Link>
           </div>
